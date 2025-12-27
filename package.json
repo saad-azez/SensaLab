@@ -1,5 +1,4 @@
 {
-  "packageManager": "pnpm@9.12.0",
   "name": "@sensalab",
   "version": "0.0.0",
   "description": "Developer starter template for Finsweet projects.",
@@ -88,6 +87,7 @@
     "typescript": "^4.9.5",
     "web-vitals": "^2.1.4"
   },
+  "packageManager": "pnpm@10.20.0",
   "engines": {
     "pnpm": ">=10"
   },
