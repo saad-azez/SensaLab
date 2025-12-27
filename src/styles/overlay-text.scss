@@ -1,0 +1,124 @@
+/* =========================================================
+   Overlay Text
+   ========================================================= */
+
+.overlay-text {
+    position: absolute;
+    inset: 0;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.7s ease;
+}
+
+.overlay-text.is-visible {
+    opacity: 1;
+}
+
+/* ---------------------------------------------------------
+   Center Title
+   --------------------------------------------------------- */
+
+.overlay-text__center {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.overlay-text__title {
+    font-family: "Audrey", sans-serif;
+    font-size: 14vw;
+    font-weight: 900;
+    letter-spacing: -0.08em;
+    line-height: 1;
+    text-align: center;
+    perspective: 2000px;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
+    color: #000;
+}
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
+
+.overlay-text__footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 4rem;
+    pointer-events: auto;
+}
+
+/* ---------------------------------------------------------
+   Social Links
+   --------------------------------------------------------- */
+
+.overlay-text__links {
+    display: flex;
+    gap: 2.5rem;
+}
+
+.overlay-text__social-link {
+    position: relative;
+    height: 14px;
+    overflow: hidden;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: "Blauer Nue", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1;
+    color: #000;
+}
+
+.overlay-text__link-primary,
+.overlay-text__link-secondary {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.overlay-text__link-secondary {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+}
+
+/* ---------------------------------------------------------
+   Text Card
+   --------------------------------------------------------- */
+
+.overlay-text__card {
+    max-width: 36rem;
+    padding: 2rem;
+    border-radius: 1.25rem;
+    background: rgba(0, 0, 0, 0.02);
+    backdrop-filter: blur(40px);
+    box-shadow:
+        1px 1px 4px rgba(255, 255, 255, 0.6) inset,
+        -1px -1px 1px rgba(255, 255, 255, 0.3) inset;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.overlay-text__body {
+    font-family: "Blauer Nue", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: 1;
+    text-transform: uppercase;
+    color: #000;
+}
+
+/* ---------------------------------------------------------
+   Split characters
+   --------------------------------------------------------- */
+
+.overlay-text__char {
+    display: inline-block;
+    will-change: transform;
+}

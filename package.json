@@ -1,0 +1,96 @@
+{
+  "name": "@sensalab",
+  "version": "0.0.0",
+  "description": "Developer starter template for Finsweet projects.",
+  "homepage": "https://github.com/finsweet/developer-starter#readme",
+  "license": "ISC",
+  "keywords": [],
+  "author": {
+    "name": "Finsweet",
+    "url": "https://finsweet.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/finsweet/developer-starter.git"
+  },
+  "bugs": {
+    "url": "https://github.com/finsweet/developer-starter/issues"
+  },
+  "type": "module",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "cross-env NODE_ENV=production node ./bin/build.js",
+    "lint": "eslint ./src && prettier --check ./src",
+    "lint:fix": "eslint ./src --fix",
+    "check": "tsc --noEmit",
+    "format": "prettier --write ./src",
+    "test": "playwright test",
+    "test:ui": "playwright test --ui",
+    "release": "changeset publish",
+    "update": "pnpm update -i -L -r",
+    "styles": "sass src/styles/main.scss dist/styles.css --watch",
+    "build:js": "cross-env NODE_ENV=development node ./bin/build.js",
+    "dev": "concurrently \"pnpm run styles\" \"pnpm run build:js\""
+  },
+  "devDependencies": {
+    "@changesets/changelog-git": "^0.2.0",
+    "@changesets/cli": "^2.27.12",
+    "@eslint/js": "^9.19.0",
+    "@finsweet/eslint-config": "^3.0.3",
+    "@finsweet/tsconfig": "^1.4.2",
+    "@playwright/test": "^1.50.1",
+    "@types/three": "^0.182.0",
+    "concurrently": "^9.2.1",
+    "cross-env": "^7.0.3",
+    "esbuild": "^0.24.2",
+    "eslint": "^9.19.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "eslint-plugin-simple-import-sort": "^12.1.1",
+    "prettier": "^3.4.2",
+    "sass": "^1.97.1",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.23.0"
+  },
+  "dependencies": {
+    "@finsweet/ts-utils": "^0.40.0",
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.12.28",
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^13.5.0",
+    "@types/jest": "^27.5.2",
+    "@types/node": "^16.18.126",
+    "@types/react": "^19.1.5",
+    "@types/react-dom": "^19.1.5",
+    "eslint": "^8.23.0",
+    "eslint-config-standard-with-typescript": "^22.0.0",
+    "eslint-import-resolver-typescript": "^3.5.2",
+    "eslint-plugin-deprecation": "^1.3.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-n": "^15.2.5",
+    "eslint-plugin-prefer-arrow": "^1.2.3",
+    "eslint-plugin-promise": "^6.0.1",
+    "eslint-plugin-react": "^7.31.1",
+    "gsap": "3.12.5",
+    "lenis": "1.3.16",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "react-scripts": "5.0.1",
+    "tailwindcss": "^4.1.18",
+    "three": "^0.182.0",
+    "typescript": "^4.9.5",
+    "web-vitals": "^2.1.4"
+  },
+  "engines": {
+    "pnpm": ">=10"
+  },
+  "publishConfig": {
+    "provenance": true
+  }
+}

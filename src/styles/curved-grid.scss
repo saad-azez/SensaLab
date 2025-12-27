@@ -1,0 +1,38 @@
+/* =========================================================
+   Curved Grid Section
+   ========================================================= */
+
+.curved-grid {
+    position: relative;
+    width: 100%;
+    min-height: 100vh; // CRITICAL for visibility
+    background-color: #ffffff;
+    overflow: hidden;
+}
+
+/* ---------------------------------------------------------
+   Spline mount target
+   --------------------------------------------------------- */
+
+.curved-grid__spline {
+    position: absolute;
+    inset: 0;
+    z-index: 10;
+}
+
+/* ---------------------------------------------------------
+   Soft gradient overlay
+   --------------------------------------------------------- */
+
+.curved-grid__overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 20;
+    pointer-events: none;
+
+    background: linear-gradient(45deg,
+            #f9fafb,
+            #ffffff);
+
+    opacity: 0.4;
+}
