@@ -1,4 +1,5 @@
 {
+  "packageManager": "pnpm@9.12.0",
   "name": "@sensalab",
   "version": "0.0.0",
   "description": "Developer starter template for Finsweet projects.",
