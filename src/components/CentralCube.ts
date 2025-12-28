@@ -1,15 +1,25 @@
 
 import * as THREE from "three";
 
-
 export class CentralCube {
   public group: THREE.Group;
   private vertexMat: THREE.MeshBasicMaterial;
   private edgeMat: THREE.MeshBasicMaterial;
   private coreMat: THREE.MeshBasicMaterial;
 
-  private targetRotation = new THREE.Vector2(0, 0);
-  private currentRotation = new THREE.Vector2(0, 0);
+  // Rotation states
+  private baseRotation = new THREE.Euler(Math.PI / 6, Math.PI / 4, 0);
+  private mouseOffset = new THREE.Vector2(0, 0);
+  private currentMouseOffset = new THREE.Vector2(0, 0);
+
+  // Influence tracking
+  private mouseInfluence = 0;
+  private targetInfluence = 0;
+  private lastMoveTime = 0;
+  private INACTIVITY_THRESHOLD = 1500; // ms before returning to idle
+
+  // Procedural animation
+  private time = 0;
 
   constructor() {
     this.group = new THREE.Group();
@@ -68,13 +78,8 @@ export class CentralCube {
       this.group.add(pixel);
     });
 
-    // CRITICAL: MUST MATCH LOADER.TSX ROTATION
-    const initialX = Math.PI / 6;
-    const initialY = Math.PI / 4;
-    this.currentRotation.set(initialX, initialY);
-    this.targetRotation.set(initialX, initialY);
-    this.group.rotation.x = initialX;
-    this.group.rotation.y = initialY;
+    // Initial orientation
+    this.group.rotation.copy(this.baseRotation);
 
     window.addEventListener("mousemove", this.handleMouseMove);
   }
@@ -82,11 +87,15 @@ export class CentralCube {
   private handleMouseMove = (e: MouseEvent): void => {
     const x = (e.clientX / window.innerWidth) * 2 - 1;
     const y = -(e.clientY / window.innerHeight) * 2 + 1;
-    const baseX = Math.PI / 6;
-    const baseY = Math.PI / 4;
-    const range = 0.6;
-    this.targetRotation.y = baseY + (x * range);
-    this.targetRotation.x = baseX - (y * range);
+
+    // Target offset based on cursor position
+    const range = 0.5;
+    this.mouseOffset.x = -y * range; // Tilt X based on Y mouse
+    this.mouseOffset.y = x * range;  // Tilt Y based on X mouse
+
+    // Activate influence
+    this.targetInfluence = 1.0;
+    this.lastMoveTime = performance.now();
   };
 
   public setVertexOpacity(opacity: number): void {
@@ -111,11 +120,34 @@ export class CentralCube {
   }
 
   public update(): void {
-    const ease = 0.08;
-    this.currentRotation.x += (this.targetRotation.x - this.currentRotation.x) * ease;
-    this.currentRotation.y += (this.targetRotation.y - this.currentRotation.y) * ease;
-    this.group.rotation.x = this.currentRotation.x;
-    this.group.rotation.y = this.currentRotation.y;
+    this.time += 0.01;
+    const now = performance.now();
+
+    // 1. Check for inactivity
+    if (now - this.lastMoveTime > this.INACTIVITY_THRESHOLD) {
+      this.targetInfluence = 0;
+    }
+
+    // 2. Smoothly lerp influence and mouse offset
+    const lerpSpeed = 0.05;
+    this.mouseInfluence += (this.targetInfluence - this.mouseInfluence) * lerpSpeed;
+    this.currentMouseOffset.lerp(this.mouseOffset, lerpSpeed);
+
+    // 3. Idle procedural motion (Floating effect)
+    const floatY = Math.sin(this.time * 0.5) * 0.5;
+    const idleRotationX = Math.sin(this.time * 0.3) * 0.05;
+    const idleRotationY = this.time * 0.15; // Continuous slow spin
+
+    // 4. Combine all transforms
+    // Group handles the combined rotation
+    this.group.position.y = floatY;
+
+    // Apply Base + Idle + (MouseOffset * Influence)
+    this.group.rotation.x = this.baseRotation.x + idleRotationX + (this.currentMouseOffset.x * this.mouseInfluence);
+    this.group.rotation.y = this.baseRotation.y + idleRotationY + (this.currentMouseOffset.y * this.mouseInfluence);
+
+    // Subtle Z oscillation
+    this.group.rotation.z = Math.cos(this.time * 0.4) * 0.03;
   }
 
   public dispose(): void {

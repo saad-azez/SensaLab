@@ -1,12 +1,25 @@
-/* =========================================================
-   Persistent Cube (Three.js canvas mount)
-   ========================================================= */
-
-.persistent-cube {
+.persistent-cube-container {
     position: fixed;
     inset: 0;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
+    z-index: 50;
+    /* Sits above background and typography */
     pointer-events: none;
-    z-index: 50; // adjust if needed to layer with other sections
+    /* Allows interaction with elements behind it */
+    overflow: hidden;
+    display: block;
+}
+
+canvas {
+    width: 100% !important;
+    height: 100% !important;
+    display: block;
+}
+
+/* Ensure no layout shifts on mobile orientation change */
+@media (max-width: 768px) {
+    .persistent-cube-container {
+        height: -webkit-fill-available;
+    }
 }

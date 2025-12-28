@@ -1,124 +1,230 @@
-/* =========================================================
-   Overlay Text
-   ========================================================= */
-
-.overlay-text {
-    position: absolute;
+.overlay-main {
+    position: fixed;
     inset: 0;
-    padding: 3rem;
+    z-index: 100;
+    pointer-events: none;
+    color: #000000;
+    perspective: 2000px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.7s ease;
+    padding: 4vh 4vw;
+    box-sizing: border-box;
 }
 
-.overlay-text.is-visible {
-    opacity: 1;
-}
-
-/* ---------------------------------------------------------
-   Center Title
-   --------------------------------------------------------- */
-
-.overlay-text__center {
+.center-viewport-heading {
     flex: 1;
     display: flex;
-    align-items: center;
     justify-content: center;
-    overflow: hidden;
+    align-items: center;
+    width: 100%;
 }
 
-.overlay-text__title {
-    font-family: "Audrey", sans-serif;
-    font-size: 14vw;
+.hero-title {
+    /* Fluid scaling from 320px to 1920px+ */
+    font-size: clamp(3rem, 10vw, 15rem);
     font-weight: 900;
-    letter-spacing: -0.08em;
-    line-height: 1;
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    margin: 0;
+    text-transform: uppercase;
+    color: #000000;
     text-align: center;
-    perspective: 2000px;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.05);
-    color: #000;
+    overflow: visible;
+    display: block;
+    transform-style: preserve-3d;
+    padding: 0.1em 0;
+    width: 100%;
+    word-break: break-all;
 }
 
-/* ---------------------------------------------------------
-   Footer
-   --------------------------------------------------------- */
+.char-wrapper {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+    padding: 0 0.01em;
+}
 
-.overlay-text__footer {
+.char-inner {
+    display: inline-block;
+    will-change: transform, opacity;
+    transform-origin: center bottom;
+}
+
+.word-wrapper {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: bottom;
+}
+
+.word-inner {
+    display: inline-block;
+    will-change: transform;
+}
+
+.overlay-footer {
+    width: 100%;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 4rem;
     pointer-events: auto;
+    gap: 2rem;
 }
 
-/* ---------------------------------------------------------
-   Social Links
-   --------------------------------------------------------- */
-
-.overlay-text__links {
+.social-nav {
     display: flex;
-    gap: 2.5rem;
+    gap: clamp(1.5rem, 3vw, 4rem);
 }
 
-.overlay-text__social-link {
+.social-link {
+    display: block;
     position: relative;
-    height: 14px;
+    text-decoration: none;
+    color: #000000;
+    font-size: clamp(0.7rem, 0.75vw, 0.9rem);
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.5rem 0;
+    transition: opacity 0.3s ease;
+}
+
+.social-link:hover {
+    opacity: 0.7;
+}
+
+.char-swap-container {
+    display: block;
+    position: relative;
+    height: 1.2em;
     overflow: hidden;
-    cursor: pointer;
-    text-transform: uppercase;
-    font-family: "Blauer Nue", sans-serif;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 1;
-    color: #000;
 }
 
-.overlay-text__link-primary,
-.overlay-text__link-secondary {
+.layer-primary {
+    position: relative;
     display: flex;
-    align-items: center;
-    height: 100%;
+    z-index: 2;
 }
 
-.overlay-text__link-secondary {
+.layer-secondary {
     position: absolute;
-    inset: 0;
-    pointer-events: none;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    z-index: 1;
 }
 
-/* ---------------------------------------------------------
-   Text Card
-   --------------------------------------------------------- */
+.footer-right-para {
+    max-width: clamp(300px, 35vw, 550px);
+    text-align: right;
+}
 
-.overlay-text__card {
-    max-width: 36rem;
-    padding: 2rem;
-    border-radius: 1.25rem;
-    background: rgba(0, 0, 0, 0.02);
-    backdrop-filter: blur(40px);
-    box-shadow:
-        1px 1px 4px rgba(255, 255, 255, 0.6) inset,
-        -1px -1px 1px rgba(255, 255, 255, 0.3) inset;
+.para-blur-card {
+    padding: clamp(1rem, 1.5vw, 2rem);
+    border-radius: 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
     border: 1px solid rgba(0, 0, 0, 0.05);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.03);
 }
 
-.overlay-text__body {
-    font-family: "Blauer Nue", sans-serif;
-    font-weight: 300;
-    font-size: 14px;
-    line-height: 1;
+.overlay-body-text {
+    font-size: clamp(0.65rem, 0.7vw, 0.85rem);
+    font-weight: 500;
+    line-height: 1.6;
+    letter-spacing: 0.04em;
+    color: #000000;
     text-transform: uppercase;
-    color: #000;
+    margin: 0;
 }
 
-/* ---------------------------------------------------------
-   Split characters
-   --------------------------------------------------------- */
+/* Tablet & Large Mobile */
+@media (max-width: 1024px) {
+    .overlay-footer {
+        align-items: center;
+    }
 
-.overlay-text__char {
-    display: inline-block;
-    will-change: transform;
+    .footer-right-para {
+        max-width: 40vw;
+    }
+}
+
+/* Mobile Portrait */
+@media (max-width: 768px) {
+    .overlay-main {
+        padding: 6vh 6vw;
+    }
+
+    .overlay-footer {
+        flex-direction: column-reverse;
+        align-items: flex-start;
+        gap: 2.5rem;
+    }
+
+    .social-nav {
+        width: 100%;
+        justify-content: flex-start;
+        gap: 2rem;
+    }
+
+    .footer-right-para {
+        max-width: 100%;
+        text-align: left;
+    }
+
+    .para-blur-card {
+        padding: 0;
+        background: none;
+        border: none;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+        box-shadow: none;
+    }
+
+    .hero-title {
+        font-size: clamp(3.5rem, 20vw, 12rem);
+    }
+
+    .overlay-body-text {
+        font-size: 0.75rem;
+        line-height: 1.5;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 380px) {
+    .hero-title {
+        font-size: clamp(3rem, 22vw, 5rem);
+    }
+
+    .social-nav {
+        gap: 1.2rem;
+    }
+
+    .social-link {
+        font-size: 0.65rem;
+    }
+}
+
+/* Landscape Mobile Fix */
+@media (max-height: 500px) and (orientation: landscape) {
+    .overlay-main {
+        padding: 2vh 4vw;
+    }
+
+    .hero-title {
+        font-size: 15vh;
+    }
+
+    .overlay-footer {
+        flex-direction: row;
+        align-items: flex-end;
+    }
+
+    .para-blur-card {
+        display: none;
+        /* Hide paragraph on small height landscape to clear view */
+    }
 }
