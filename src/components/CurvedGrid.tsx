@@ -39,7 +39,7 @@ const CurvedGrid: React.FC = () => {
     <div ref={containerRef} className="curved-grid-container">
       <Suspense fallback={<div className="spline-loading-placeholder" />}>
         <Spline
-          scene="https://prod.spline.design/BgQPEjgRtIEYPM9m/scene.splinecode"
+          scene="https://prod.spline.design/Z83XQQvKBFgD3bzn/scene.splinecode"
           onLoad={handleLoad}
           onError={handleError}
           className="spline-runtime-canvas"
