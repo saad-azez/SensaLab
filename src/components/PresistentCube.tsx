@@ -1,3 +1,4 @@
+
 import React, { useEffect, useRef } from "react";
 import * as THREE from "three";
 import gsap from "gsap";
@@ -15,55 +16,61 @@ const PersistentCube: React.FC<PersistentCubeProps> = ({ show }) => {
     const mount = mountRef.current;
     if (!mount) return;
 
+    // 1. Scene Setup
     const scene = new THREE.Scene();
-
-    const camera = new THREE.PerspectiveCamera(
-      45,
-      window.innerWidth / window.innerHeight,
-      0.1,
-      400
-    );
+    const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
 
     const updateCamera = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
-      camera.aspect = w / h;
+      const aspect = w / h;
+      camera.aspect = aspect;
       camera.updateProjectionMatrix();
-      camera.position.set(0, 0, w / h < 1.0 ? 45 : 30);
+
+      // Dynamic distance based on aspect ratio for responsive framing
+      const distance = aspect < 1.0 ? 55 : 40;
+      camera.position.set(0, 0, distance);
     };
+
     updateCamera();
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
       antialias: true,
+      powerPreference: "high-performance"
     });
-
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
 
+    // 2. Initialize the Central Cube Asset
     const centralCube = new CentralCube();
 
-    // High-end color palette
-    centralCube.setCoreColor(new THREE.Color(0x02020a));
-    centralCube.setEdgeColor(new THREE.Color(0x6366f1));
-    centralCube.setVertexColor(new THREE.Color(0x22d3ee));
+    // High-end color palette for Aether aesthetic (Deep Black Core, Soft White Edges)
+    centralCube.setCoreColor(new THREE.Color(0x000000));
+    centralCube.setEdgeColor(new THREE.Color(0x111111));
+    centralCube.setVertexColor(new THREE.Color(0x000000));
 
-    centralCube.setStructureOpacity(0);
-    centralCube.setVertexOpacity(0);
-    centralCube.group.scale.set(1, 1, 1);
+    // Start invisible for entrance stagger
+    centralCube.setStructureOpacity(0.0);
+    centralCube.setVertexOpacity(0.0);
+    centralCube.group.scale.set(0.2, 0.2, 0.2); // Start small for punchy entrance
 
     scene.add(centralCube.group);
     cubeRef.current = centralCube;
 
+    // 3. Animation Loop
     let animId: number;
     const animate = () => {
       animId = requestAnimationFrame(animate);
-      centralCube.update();
+      if (cubeRef.current) {
+        cubeRef.current.update();
+      }
       renderer.render(scene, camera);
     };
     animate();
 
+    // 4. Handle Responsiveness
     const onResize = () => {
       updateCamera();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -81,63 +88,43 @@ const PersistentCube: React.FC<PersistentCubeProps> = ({ show }) => {
     };
   }, []);
 
+  // Entrance Logic
   useEffect(() => {
-    if (!show || !cubeRef.current) return;
+    if (show && cubeRef.current) {
+      const cube = cubeRef.current;
+      const tl = gsap.timeline({ delay: 0.2 });
 
-    const cube = cubeRef.current;
-    const tl = gsap.timeline();
+      // Scale up with high-end bounce
+      tl.to(cube.group.scale, {
+        x: 1,
+        y: 1,
+        z: 1,
+        duration: 2.2,
+        ease: "elastic.out(1, 0.75)",
+      });
 
-    tl.to(
-      { val: 0 },
-      {
-        val: 1,
+      // Fade in structure opacity (Internal val to avoid property direct access issues)
+      const opacObj = { struct: 0, vertex: 0 };
+      tl.to(opacObj, {
+        struct: 1.0,
+        vertex: 0.6,
         duration: 2.5,
         ease: "power2.inOut",
         onUpdate() {
-          cube.setStructureOpacity(
-            (this.targets()[0] as any).val
-          );
+          cube.setStructureOpacity(opacObj.struct);
+          cube.setVertexOpacity(opacObj.vertex);
         },
-      }
-    );
-
-    tl.to(
-      { val: 0 },
-      {
-        val: 1,
-        duration: 1.5,
-        ease: "power4.out",
-        onUpdate() {
-          cube.setVertexOpacity(
-            (this.targets()[0] as any).val
-          );
-        },
-      },
-      "-=1.8"
-    );
-
-    gsap.to(cube.group.scale, {
-      x: 1.04,
-      y: 1.04,
-      z: 1.04,
-      duration: 0.08,
-      repeat: 5,
-      yoyo: true,
-      ease: "none",
-      delay: 0.1,
-    });
-
-    gsap.to(cube.group.scale, {
-      x: 1,
-      y: 1,
-      z: 1,
-      duration: 1.2,
-      ease: "elastic.out(1, 0.3)",
-      delay: 0.5,
-    });
+      }, 0);
+    }
   }, [show]);
 
-  return <div ref={mountRef} className="persistent-cube" />;
+  return (
+    <div
+      ref={mountRef}
+      className="persistent-cube-container"
+      aria-hidden="true"
+    />
+  );
 };
 
 export default PersistentCube;
