@@ -1,6 +1,17 @@
-.interactive-plane {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
+.interactive-video-container-sticky {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     z-index: 70;
+    pointer-events: none;
+    overflow: hidden;
+    will-change: transform, opacity;
+}
+
+.interactive-video-container-sticky canvas {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
 }

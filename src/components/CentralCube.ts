@@ -16,17 +16,15 @@ export class CentralCube {
   private mouseInfluence = 0;
   private targetInfluence = 0;
   private lastMoveTime = 0;
-  private INACTIVITY_THRESHOLD = 1500; // ms before returning to idle
-
-  // Procedural animation
-  private time = 0;
+  private INACTIVITY_THRESHOLD = 1000; // ms before returning to idle
 
   constructor() {
     this.group = new THREE.Group();
-    const cubeSize = 8;
+    // Increased size significantly for "center of attention" presence
+    const cubeSize = 18;
 
-    const edgeRadius = 0.05;
-    const vertexRadius = 0.18;
+    const edgeRadius = 0.08;
+    const vertexRadius = 0.3;
 
     // 1. Solid Core
     const coreGeo = new THREE.BoxGeometry(cubeSize - 0.1, cubeSize - 0.1, cubeSize - 0.1);
@@ -89,9 +87,9 @@ export class CentralCube {
     const y = -(e.clientY / window.innerHeight) * 2 + 1;
 
     // Target offset based on cursor position
-    const range = 0.5;
-    this.mouseOffset.x = -y * range; // Tilt X based on Y mouse
-    this.mouseOffset.y = x * range;  // Tilt Y based on X mouse
+    const range = 0.6;
+    this.mouseOffset.x = -y * range;
+    this.mouseOffset.y = x * range;
 
     // Activate influence
     this.targetInfluence = 1.0;
@@ -120,34 +118,21 @@ export class CentralCube {
   }
 
   public update(): void {
-    this.time += 0.01;
     const now = performance.now();
 
-    // 1. Check for inactivity
     if (now - this.lastMoveTime > this.INACTIVITY_THRESHOLD) {
       this.targetInfluence = 0;
     }
 
-    // 2. Smoothly lerp influence and mouse offset
-    const lerpSpeed = 0.05;
+    const lerpSpeed = 0.04;
     this.mouseInfluence += (this.targetInfluence - this.mouseInfluence) * lerpSpeed;
     this.currentMouseOffset.lerp(this.mouseOffset, lerpSpeed);
 
-    // 3. Idle procedural motion (Floating effect)
-    const floatY = Math.sin(this.time * 0.5) * 0.5;
-    const idleRotationX = Math.sin(this.time * 0.3) * 0.05;
-    const idleRotationY = this.time * 0.15; // Continuous slow spin
+    this.group.rotation.x = this.baseRotation.x + (this.currentMouseOffset.x * this.mouseInfluence);
+    this.group.rotation.y = this.baseRotation.y + (this.currentMouseOffset.y * this.mouseInfluence);
 
-    // 4. Combine all transforms
-    // Group handles the combined rotation
-    this.group.position.y = floatY;
-
-    // Apply Base + Idle + (MouseOffset * Influence)
-    this.group.rotation.x = this.baseRotation.x + idleRotationX + (this.currentMouseOffset.x * this.mouseInfluence);
-    this.group.rotation.y = this.baseRotation.y + idleRotationY + (this.currentMouseOffset.y * this.mouseInfluence);
-
-    // Subtle Z oscillation
-    this.group.rotation.z = Math.cos(this.time * 0.4) * 0.03;
+    this.group.rotation.z = 0;
+    this.group.position.set(0, 0, 0);
   }
 
   public dispose(): void {
