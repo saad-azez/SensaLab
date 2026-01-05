@@ -11,28 +11,49 @@ interface PersistentCubeProps {
 const PersistentCube: React.FC<PersistentCubeProps> = ({ show }) => {
   const mountRef = useRef<HTMLDivElement>(null);
   const cubeRef = useRef<CentralCube | null>(null);
+  const rendererRef = useRef<THREE.WebGLRenderer | null>(null);
+  const cameraRef = useRef<THREE.PerspectiveCamera | null>(null);
 
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
 
-    // 1. Scene Setup
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+    cameraRef.current = camera;
 
     const updateCamera = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
       const aspect = w / h;
       camera.aspect = aspect;
-      camera.updateProjectionMatrix();
 
-      // Dynamic distance based on aspect ratio for responsive framing
-      const distance = aspect < 1.0 ? 55 : 40;
+      // Calibrated for a cubeSize of 18
+      let distance = 65;
+      let cubeScale = 1;
+
+      if (aspect < 0.8) {
+        // Mobile Portrait: Push back further to prevent clipping edges
+        distance = 110;
+        cubeScale = 0.9;
+      } else if (aspect < 1.2) {
+        // Tablet / Square
+        distance = 85;
+        cubeScale = 1.0;
+      } else {
+        // Wide Desktop
+        distance = 65;
+        cubeScale = 1.1;
+      }
+
       camera.position.set(0, 0, distance);
-    };
+      camera.lookAt(0, 0, 0);
 
-    updateCamera();
+      if (cubeRef.current) {
+        if (show) cubeRef.current.group.scale.set(cubeScale, cubeScale, cubeScale);
+      }
+      camera.updateProjectionMatrix();
+    };
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -42,24 +63,22 @@ const PersistentCube: React.FC<PersistentCubeProps> = ({ show }) => {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     mount.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
 
-    // 2. Initialize the Central Cube Asset
     const centralCube = new CentralCube();
-
-    // High-end color palette for Aether aesthetic (Deep Black Core, Soft White Edges)
     centralCube.setCoreColor(new THREE.Color(0x000000));
     centralCube.setEdgeColor(new THREE.Color(0x111111));
     centralCube.setVertexColor(new THREE.Color(0x000000));
 
-    // Start invisible for entrance stagger
     centralCube.setStructureOpacity(0.0);
     centralCube.setVertexOpacity(0.0);
-    centralCube.group.scale.set(0.2, 0.2, 0.2); // Start small for punchy entrance
+    centralCube.group.scale.set(0.1, 0.1, 0.1);
 
     scene.add(centralCube.group);
     cubeRef.current = centralCube;
 
-    // 3. Animation Loop
+    updateCamera();
+
     let animId: number;
     const animate = () => {
       animId = requestAnimationFrame(animate);
@@ -70,7 +89,6 @@ const PersistentCube: React.FC<PersistentCubeProps> = ({ show }) => {
     };
     animate();
 
-    // 4. Handle Responsiveness
     const onResize = () => {
       updateCamera();
       renderer.setSize(window.innerWidth, window.innerHeight);
@@ -88,22 +106,24 @@ const PersistentCube: React.FC<PersistentCubeProps> = ({ show }) => {
     };
   }, []);
 
-  // Entrance Logic
   useEffect(() => {
     if (show && cubeRef.current) {
       const cube = cubeRef.current;
       const tl = gsap.timeline({ delay: 0.2 });
 
-      // Scale up with high-end bounce
+      const w = window.innerWidth;
+      const h = window.innerHeight;
+      const aspect = w / h;
+      const targetScale = aspect < 0.8 ? 0.9 : (aspect < 1.2 ? 1.0 : 1.1);
+
       tl.to(cube.group.scale, {
-        x: 1,
-        y: 1,
-        z: 1,
-        duration: 2.2,
-        ease: "elastic.out(1, 0.75)",
+        x: targetScale,
+        y: targetScale,
+        z: targetScale,
+        duration: 2.5,
+        ease: "elastic.out(1, 0.8)",
       });
 
-      // Fade in structure opacity (Internal val to avoid property direct access issues)
       const opacObj = { struct: 0, vertex: 0 };
       tl.to(opacObj, {
         struct: 1.0,
