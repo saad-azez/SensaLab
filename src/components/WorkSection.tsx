@@ -17,35 +17,35 @@ const projects: ProjectData[] = [
     title: "NEURAL LINK",
     description: "Architecting seamless biological interfaces that bridge the gap between human cognition and synthetic intelligence processing units.",
     year: "2024",
-    url: "https://images.unsplash.com/photo-1639762681485-074b7f938ba0?q=80&w=2000&auto=format&fit=crop"
+    url: "https://cdn.prod.website-files.com/694820490d81aecdfa730cb1%2F6961799df53b06cd43d6fc46_Loop%201_mp4.mp4"
   },
   {
     id: 1,
     title: "HYPER GRID",
     description: "Next-generation energy infrastructure designed for hyper-dense urban environments, utilizing decentralized quantum distribution networks.",
     year: "2024",
-    url: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2000&auto=format&fit=crop"
+    url: "https://cdn.prod.website-files.com/694820490d81aecdfa730cb1%2F69617a1eadf607bdf9c541ca_Loop%202_mp4.mp4"
   },
   {
     id: 2,
     title: "VOID SPACE",
     description: "Exploring the aesthetic potential of negative volume in interstellar architecture through procedural geometry and light manipulation.",
     year: "2025",
-    url: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2000&auto=format&fit=crop"
+    url: "https://cdn.prod.website-files.com/694820490d81aecdfa730cb1%2F69617a55fa62470058c8d251_Loop%203_mp4.mp4"
   },
   {
     id: 3,
     title: "SONIC FLUX",
     description: "An immersive audio-visual ecosystem that translates real-time planetary data into evolving soundscapes and topographic visualizations.",
     year: "2023",
-    url: "https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?q=80&w=2000&auto=format&fit=crop"
+    url: "https://cdn.prod.website-files.com/694820490d81aecdfa730cb1%2F69617a8e97d02fae43497f22_Loop%204_mp4.mp4"
   },
   {
     id: 4,
     title: "AERO DYNAMICS",
     description: "Computational fluid dynamics research focused on high-altitude low-gravity transport systems for near-orbit logistics.",
     year: "2024",
-    url: "https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?q=80&w=2000&auto=format&fit=crop"
+    url: "https://cdn.prod.website-files.com/694820490d81aecdfa730cb1%2F69617ac8554519b7cc800e54_Loop%205_mp4.mp4"
   },
 ];
 
