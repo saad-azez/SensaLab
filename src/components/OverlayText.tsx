@@ -18,8 +18,10 @@ const OverlayText: React.FC<OverlayTextProps> = ({ show = true }) => {
     hasStartedScrolling: false
   });
 
-  const headerText = "LOREM IPSUM";
-  const bodyText = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut et massa mi. Aliquam in hendrerit urna.";
+  const headerText = "Rendering Dreams";
+  const bodyText =
+    "Renders imagination into emotional, immersive and measurable realities.";
+  const scrollText = "SCROLL DOWN";
 
   const splitChars = (text: string) =>
     text.split("").map((char, i) => (
@@ -44,9 +46,10 @@ const OverlayText: React.FC<OverlayTextProps> = ({ show = true }) => {
       const titleChars = gsap.utils.toArray(".hero-title .char-inner");
       const paraWords = gsap.utils.toArray(".overlay-body-text .word-inner");
       const socialLinks = gsap.utils.toArray(".social-link");
+      const scrollChars = gsap.utils.toArray(".scroll-text .char-inner");
       const blurCard = ".para-blur-card";
 
-      // 1. EXIT TIMELINE (SCROLL UP)
+      // EXIT TIMELINE
       scrollTl.current = gsap.timeline({ paused: true });
       scrollTl.current
         .to(titleChars, {
@@ -67,13 +70,19 @@ const OverlayText: React.FC<OverlayTextProps> = ({ show = true }) => {
           stagger: 0.005,
           ease: "power2.inOut",
         }, 0.2)
+        .to(scrollChars, {
+          yPercent: -100,
+          opacity: 0,
+          stagger: 0.02,
+          ease: "power2.inOut",
+        }, 0.25)
         .to(blurCard, {
           opacity: 0,
           duration: 0.4,
           ease: "power1.out",
         }, 0.7);
 
-      // 2. ENTRANCE TIMELINE
+      // ENTRANCE TIMELINE
       if (show) {
         entranceTl.current = gsap.timeline({
           onComplete: () => {
@@ -97,10 +106,14 @@ const OverlayText: React.FC<OverlayTextProps> = ({ show = true }) => {
             { yPercent: 100, opacity: 0 },
             { yPercent: 0, opacity: 1, duration: 1.0, stagger: 0.005, ease: "power3.out" },
             "-=0.6"
+          )
+          .fromTo(scrollChars,
+            { yPercent: 120, opacity: 0 },
+            { yPercent: 0, opacity: 1, duration: 0.8, stagger: 0.04, ease: "power3.out" },
+            "-=0.8"
           );
       }
 
-      // 3. TICKER FOR SMOOTHNESS
       const ticker = () => {
         if (!scrollTl.current || !containerRef.current) return;
 
@@ -154,8 +167,8 @@ const OverlayText: React.FC<OverlayTextProps> = ({ show = true }) => {
         <h1 className="hero-title">{splitChars(headerText)}</h1>
       </div>
 
-      <footer className="overlay-footer">
-        <div className="footer-left-links">
+      <div className="overlay-bottom-wrapper">
+        <div className="bottom-left-links">
           <nav className="social-nav">
             {["INSTAGRAM", "TWITTER", "LINKEDIN"].map((label) => (
               <a key={label} href="#" className="social-link" onClick={(e) => e.preventDefault()}>
@@ -168,14 +181,21 @@ const OverlayText: React.FC<OverlayTextProps> = ({ show = true }) => {
           </nav>
         </div>
 
-        <div className="footer-right-para">
+        <div className="bottom-center-para">
           <div className="para-blur-card">
             <p className="overlay-body-text">
               {splitWords(bodyText)}
             </p>
           </div>
         </div>
-      </footer>
+
+        <div className="bottom-right-scroll">
+          <div className="scroll-indicator">
+            <span className="scroll-text">{splitChars(scrollText)}</span>
+            <span className="scroll-arrow">↓</span>
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
