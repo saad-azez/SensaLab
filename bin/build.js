@@ -43,6 +43,8 @@ const context = await esbuild.context({
     '.avif': 'file',
     '.svg': 'file',
     '.gif': 'file',
+    ".glb": "file",
+    ".gltf": "file",
   },
 
   inject: LIVE_RELOAD ? ['./bin/live-reload.js'] : undefined,

@@ -1,25 +1,23 @@
-
 import React, { useEffect, useState } from "react";
 import Lenis from "lenis";
 import OverlayText from "./components/OverlayText";
 import CurvedGrid from "./components/CurvedGrid";
 import InteractiveVideoPlane from "./components/InteractivePlaneVideo";
 import PersistentCube from "./components/PresistentCube";
+import WorkSection from "./components/WorkSection";
+import FinalSection from "./components/FinalSection";
 import type { LenisScrollDetail } from "./components/types";
 import "./App.css";
-
 const App: React.FC = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [isRevealing, setIsRevealing] = useState(false);
-
   useEffect(() => {
     window.scrollTo(0, 0);
     if ("scrollRestoration" in window.history) {
       window.history.scrollRestoration = "manual";
     }
-
     const lenis = new Lenis({
-      duration: 1.5,
+      duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       smoothWheel: true,
     });
@@ -42,7 +40,7 @@ const App: React.FC = () => {
     }
     rafId = requestAnimationFrame(raf);
 
-    const timer = setTimeout(() => setIsRevealing(true), 300);
+    const timer = setTimeout(() => setIsRevealing(true), 400);
 
     return () => {
       clearTimeout(timer);
@@ -50,30 +48,30 @@ const App: React.FC = () => {
       cancelAnimationFrame(rafId);
     };
   }, []);
-
   return (
     <div className="app-main-container">
-      {/* 1. FIXED PERSISTENT BACKGROUND & 3D ELEMENTS */}
+      {/* 1. FIXED PERSISTENT BACKGROUND */}
       <div className="fixed-bg-layer">
         <CurvedGrid />
-        <PersistentCube show={isRevealing} />
       </div>
+      code
+      Code
+      {/* 2. THE CUBE (Top Level for max visibility) */}
+      <PersistentCube show={isRevealing} />
 
-      {/* 2. STICKY SCENE CONTAINER (The visual stage) */}
+      {/* 3. STICKY SCENE CONTAINER */}
       <div className="sticky-scene-wrapper">
         <div className="scene-fixed-content">
-          {/* Text exits as progress increases */}
           <OverlayText show={isRevealing} />
-
-          {/* Plane enters as progress increases */}
-          <InteractiveVideoPlane progress={scrollProgress} />
+          <InteractiveVideoPlane />
+          <WorkSection progress={scrollProgress} />
+          <FinalSection />
         </div>
       </div>
 
-      {/* 3. SCROLL SURFACE (The depth) */}
-      <div className="scroll-surface" style={{ height: "300vh" }} />
+      {/* 4. SCROLL SURFACE (Depth for Lenis) */}
+      <div className="scroll-surface" style={{ height: "400vh" }} />
     </div>
   );
 };
-
 export default App;

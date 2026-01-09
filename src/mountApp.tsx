@@ -35,3 +35,4 @@ export function mountApp() {
 if (location.hostname === "localhost") {
     mountApp();
 }
+
